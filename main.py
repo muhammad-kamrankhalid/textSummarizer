@@ -1,12 +1,15 @@
 import streamlit as st
 from transformers import T5Tokenizer, T5ForConditionalGeneration
-# Custom CSS to make button black
+
+# ---------------------------
+# 💅 Custom Styles (Black Button + Background)
+# ---------------------------
 st.markdown("""
     <style>
     div.stButton > button:first-child {
         background-color: black;
         color: white;
-        border: None;
+        border: none;
         height: 3em;
         width: 100%;
         font-size: 16px;
@@ -29,38 +32,40 @@ def set_background(image_url):
         unsafe_allow_html=True
     )
 
-# Use a local or web image URL
-set_background("https://play-lh.googleusercontent.com/1XD0j6QiiGetCi8Rh6HnaXgIUV7GjDkScb3EgvmhbMNPN1OKUHDS6Ton3pOYAZ-Aq5py")  # Replace with your own if needed
-# Load the saved model and tokenizer
+# 🌄 Background image
+set_background("https://play-lh.googleusercontent.com/1XD0j6QiiGetCi8Rh6HnaXgIUV7GjDkScb3EgvmhbMNPN1OKUHDS6Ton3pOYAZ-Aq5py")
+
+# ---------------------------
+# 🔄 Load model from current directory
+# ---------------------------
 @st.cache_resource
 def load_model():
-    model_path = "t5_summarizer_model"  # or full path if on local/Google Drive
-    tokenizer = T5Tokenizer.from_pretrained(model_path)
-    model = T5ForConditionalGeneration.from_pretrained(model_path)
+    tokenizer = T5Tokenizer.from_pretrained(".")
+    model = T5ForConditionalGeneration.from_pretrained(".")
     return tokenizer, model
 
 tokenizer, model = load_model()
 
-# App UI-
+# ---------------------------
+# 📋 Streamlit App UI
+# ---------------------------
 st.title("📝 Text Summarizer using T5")
 st.write("This app summarizes long text using a fine-tuned T5 model.")
 
-# User input
 user_input = st.text_area("Enter the paragraph to summarize", height=250)
-
-# Parameters
 max_input_length = st.slider("Max Input Length", 100, 512, 512)
 max_output_length = st.slider("Max Summary Length", 20, 100, 50)
 
+# ---------------------------
+# 🧠 Generate Summary
+# ---------------------------
 if st.button("Summarize"):
     if user_input.strip() == "":
         st.warning("Please enter some text.")
     else:
-        # Prepare input for T5
         input_text = "summarize: " + user_input.strip()
         input_ids = tokenizer.encode(input_text, return_tensors="pt", max_length=max_input_length, truncation=True)
 
-        # Generate summary
         summary_ids = model.generate(
             input_ids,
             max_length=max_output_length,
