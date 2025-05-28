@@ -1,0 +1,4 @@
+transfromers
+torch
+streamlit
+sentencepiece
