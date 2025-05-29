@@ -1,6 +1,7 @@
 import streamlit as st
 from transformers import pipeline
-import fitz  # PyMuPDF
+import fitz  
+# PyMuPDF
 # ---------- Background Image ----------
 def add_bg_from_url():
     st.markdown(
